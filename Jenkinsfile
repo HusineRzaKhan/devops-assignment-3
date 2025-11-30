@@ -57,12 +57,10 @@ pipeline {
 
     post {
         always {
-            // Send email after every build
-            emailext (
-                subject: "Jenkins Build - ${currentBuild.fullDisplayName}",
-                body: """Build Status: ${currentBuild.currentResult}
-                         Check results here: ${env.BUILD_URL}""",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider']] // sends to committer
+            emailext(
+                subject: "Jenkins Build #${BUILD_NUMBER}: ${currentBuild.currentResult}",
+                body: "Build Result: ${currentBuild.currentResult}\n\nCheck console output at: ${BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
             )
         }
     }

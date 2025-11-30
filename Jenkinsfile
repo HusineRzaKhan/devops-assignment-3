@@ -55,20 +55,16 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            emailext (
-                subject: "Jenkins: Tests PASSED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Build Success. Test results attached.\n\n${env.BUILD_URL}",
-                to: "${env.CHANGE_AUTHOR_EMAIL ?: 'instructor@example.com'}"
-            )
-        }
-        failure {
-            emailext (
-                subject: "Jenkins: Tests FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Build Failed. Please review test results: ${env.BUILD_URL}",
-                to: "${env.CHANGE_AUTHOR_EMAIL ?: 'instructor@example.com'}"
-            )
-        }
-    }
+    // post {
+    //     always {
+    //         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+    //             emailext(
+    //                 to: 'HussainBalochPakistan@gmail.com',
+    //                 subject: "Build ${currentBuild.fullDisplayName}",
+    //                 body: "See console output at ${env.BUILD_URL}"
+    //             )
+    //         }
+    //     }
+    // }
+
 }

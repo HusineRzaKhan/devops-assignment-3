@@ -1,22 +1,26 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def test_nav_presence(base_url, driver):
     driver.get(base_url)
-    # Try common navigation selectors
-    selectors = [
-        "//nav",
-        "//header//nav",
-        "//*[@role='navigation']",
-        "//*[@id='main-nav']",
-        "//*[@class='main-navigation']",
-    ]
     found = False
+
+    # Updated selectors to match your site
+    selectors = [
+        "//nav[@class='nekit-nav-mega-menu-container']",
+        "//nav"  # fallback
+    ]
+
     for sel in selectors:
         try:
-            el = driver.find_element(By.XPATH, sel)
-            if el.is_displayed():
-                found = True
-                break
-        except Exception:
+            # wait up to 10 seconds for the element to appear
+            WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, sel))
+            )
+            found = True
+            break
+        except:
             continue
+
     assert found, "Main navigation not found using common selectors."

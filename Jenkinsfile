@@ -55,16 +55,15 @@ pipeline {
         }
     }
 
-    // post {
-    //     always {
-    //         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-    //             emailext(
-    //                 to: 'HussainBalochPakistan@gmail.com',
-    //                 subject: "Build ${currentBuild.fullDisplayName}",
-    //                 body: "See console output at ${env.BUILD_URL}"
-    //             )
-    //         }
-    //     }
-    // }
-    //
+    post {
+        always {
+            // Send email after every build
+            emailext (
+                subject: "Jenkins Build - ${currentBuild.fullDisplayName}",
+                body: """Build Status: ${currentBuild.currentResult}
+                         Check results here: ${env.BUILD_URL}""",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']] // sends to committer
+            )
+        }
+    }
 }

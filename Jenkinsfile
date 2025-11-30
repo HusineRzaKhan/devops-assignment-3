@@ -23,10 +23,13 @@ pipeline {
         stage('Run Tests in Container') {
             steps {
                 script {
-                    sh """
+                    sh '''
                     mkdir -p $(pwd)/results
-                    docker run --rm -e TARGET_URL=${TARGET_URL} -v $(pwd)/results:/opt/tests/results ${IMAGE}
-                    """
+                    docker run --rm \
+                        -e TARGET_URL=${TARGET_URL} \
+                        -v $(pwd)/results:/opt/tests/results \
+                        ${IMAGE}
+                    '''
                 }
             }
             post {

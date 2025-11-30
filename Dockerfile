@@ -1,7 +1,6 @@
 # Dockerfile
 FROM python:3.11-slim
 
-# Set non-interactive frontend for apt
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies for Chrome and general utilities
@@ -21,27 +20,27 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
     apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# Set working directory for your tests
+# Set working directory
 WORKDIR /opt/tests
 
-# Copy Python requirements and install
-COPY requirements.txt ./
+# Copy requirements and install
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install chromedriver-binary (matches installed Chrome)
-RUN pip install --no-cache-dir chromedriver-binary
+# Install chromedriver-binary and webdriver-manager
+RUN pip install --no-cache-dir chromedriver-binary webdriver-manager
 
 # Copy all project files
 COPY . .
 
-# Ensure run_tests.sh is executable
+# Make test script executable
 RUN chmod +x /opt/tests/run_tests.sh
 
 # Create results directory
 RUN mkdir -p /opt/tests/results
 
-# Set target URL environment variable
+# Set environment variable
 ENV TARGET_URL=https://factaccount.blog
 
-# Set default entrypoint
+# Default entrypoint
 ENTRYPOINT ["/opt/tests/run_tests.sh"]

@@ -25,17 +25,20 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
 WORKDIR /opt/tests
 
 # Copy Python requirements and install
-COPY requirements.txt .
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install chromedriver-binary to match installed Chrome
+# Install chromedriver-binary (matches installed Chrome)
 RUN pip install --no-cache-dir chromedriver-binary
 
 # Copy all project files
 COPY . .
 
+# Ensure run_tests.sh is executable
+RUN chmod +x /opt/tests/run_tests.sh
+
 # Create results directory
-RUN mkdir -p results
+RUN mkdir -p /opt/tests/results
 
 # Set target URL environment variable
 ENV TARGET_URL=https://factaccount.blog
